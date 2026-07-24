@@ -1,18 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-color: #09090b; /* Very dark zinc */
-    --card-bg: rgba(24, 24, 27, 0.7);
+    /* Vibrant Animated Background Colors */
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e1b4b;
+    --bg-gradient-3: #312e81;
+    --bg-gradient-4: #000000;
+    
+    /* Glassmorphism Panel */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    
+    /* Card Styles */
+    --card-bg: rgba(255, 255, 255, 0.03);
     --card-border: rgba(255, 255, 255, 0.08);
+    --card-hover-border: rgba(255, 255, 255, 0.2);
     
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
     
-    --accent-retry: #8b5cf6; /* Violet */
-    --accent-retry-glow: rgba(139, 92, 246, 0.15);
+    /* Accents for modes */
+    --accent-retry: #a78bfa; /* Vibrant Purple */
+    --accent-retry-glow: rgba(167, 139, 250, 0.2);
     
-    --accent-normal: #10b981; /* Emerald */
-    --accent-normal-glow: rgba(16, 185, 129, 0.15);
+    --accent-normal: #34d399; /* Vibrant Green */
+    --accent-normal-glow: rgba(52, 211, 153, 0.2);
 }
 
 body {
@@ -23,75 +36,87 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--bg-color);
-    background-image: 
-        radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.12), transparent 30%),
-        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 30%);
+    background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
     color: var(--text-primary);
     line-height: 1.5;
 }
 
-.glass-panel {
-    max-width: 900px;
-    width: 90%;
-    padding: 60px 40px;
-    animation: fadeScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-    transform: scale(0.97);
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-@keyframes fadeScale {
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 50px 40px;
+    box-shadow: var(--glass-shadow);
+    max-width: 900px;
+    width: 90%;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0);
     }
 }
 
 .header-content {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
 }
 
 h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin: 0 0 16px 0;
-    letter-spacing: -0.03em;
-    background: linear-gradient(to right, #ffffff, #a1a1aa);
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0 0 15px 0;
+    letter-spacing: -1px;
+    background: linear-gradient(to right, #60a5fa, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
 }
 
 .modes-container {
     display: flex;
-    gap: 24px;
+    gap: 30px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .mode-card {
     flex: 1;
-    min-width: 300px;
-    max-width: 420px;
+    min-width: 280px;
+    max-width: 400px;
     text-decoration: none;
     color: var(--text-primary);
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 40px;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 20px;
+    padding: 40px 30px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     position: relative;
     overflow: hidden;
 }
@@ -101,37 +126,38 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 2px;
-    background: transparent;
-    transition: background 0.3s ease;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 .mode-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-10px) scale(1.02);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: var(--card-hover-border);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.mode-card:hover::before {
+    opacity: 1;
 }
 
 .retry-mode:hover {
-    box-shadow: 0 20px 40px var(--accent-retry-glow), 0 0 0 1px var(--accent-retry) inset;
-}
-
-.retry-mode:hover::before {
-    background: var(--accent-retry);
+    box-shadow: 0 20px 40px var(--accent-retry-glow);
+    border-color: var(--accent-retry);
 }
 
 .normal-mode:hover {
-    box-shadow: 0 20px 40px var(--accent-normal-glow), 0 0 0 1px var(--accent-normal) inset;
-}
-
-.normal-mode:hover::before {
-    background: var(--accent-normal);
+    box-shadow: 0 20px 40px var(--accent-normal-glow);
+    border-color: var(--accent-normal);
 }
 
 .icon-wrapper {
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,39 +166,39 @@ h1 {
 }
 
 .retry-icon {
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(167, 139, 250, 0.1);
     color: var(--accent-retry);
-    border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .normal-icon {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(52, 211, 153, 0.1);
     color: var(--accent-normal);
-    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .mode-card:hover .icon-wrapper {
-    transform: scale(1.05);
+    transform: scale(1.15) rotate(5deg);
 }
 
 .mode-card h2 {
     font-size: 1.5rem;
-    margin: 0 0 12px 0;
+    margin: 0 0 15px 0;
     font-weight: 600;
-    letter-spacing: -0.02em;
 }
+
+.retry-mode h2 { color: var(--accent-retry); }
+.normal-mode h2 { color: var(--accent-normal); }
 
 .mode-card p {
     color: var(--text-secondary);
     font-size: 0.95rem;
     line-height: 1.6;
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
 }
 
 @media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
     .glass-panel { padding: 40px 20px; }
-    h1 { font-size: 2.5rem; }
     .modes-container { flex-direction: column; align-items: center; }
-    .mode-card { width: 100%; max-width: 340px; padding: 30px; }
+    .mode-card { width: 100%; max-width: 320px; }
 }
