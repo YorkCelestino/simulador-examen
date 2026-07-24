@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
             // Conta el número original de tarjetas
             const TOTAL_PREGUNTAS_INICIALES = document.querySelectorAll('#quiz-form > .question-card').length;
             let aciertosPrimerIntento = 0;
@@ -18,6 +18,10 @@
                     const nombreGrupo = opcionSeleccionada.name;
                     const esUnReintento = opcionSeleccionada.closest('#retry-container') !== null;
                     const todasLasOpciones = formularioQuiz.querySelectorAll(`input[name="${nombreGrupo}"]`);
+
+                    // Leer el modo de la URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const isRetryMode = urlParams.get('mode') !== 'normal';
 
                     // 1. Validar e inhabilitar grupo de opciones
                     todasLasOpciones.forEach(opcion => {
@@ -42,41 +46,43 @@
                             preguntasRespondidasOriginales++;
                             const tarjetaOriginal = opcionSeleccionada.closest('.question-card');
 
-                            setTimeout(() => {
-                                tarjetaOriginal.classList.add('fade-out');
-
+                            if (isRetryMode) {
                                 setTimeout(() => {
-                                    const tarjetaClonada = tarjetaOriginal.cloneNode(true);
-                                    tarjetaClonada.classList.remove('fade-out');
+                                    tarjetaOriginal.classList.add('fade-out');
 
-                                    const inputsClonados = tarjetaClonada.querySelectorAll('input[type="radio"]');
-                                    const divsOpciones = tarjetaClonada.querySelectorAll('.option-item');
+                                    setTimeout(() => {
+                                        const tarjetaClonada = tarjetaOriginal.cloneNode(true);
+                                        tarjetaClonada.classList.remove('fade-out');
 
-                                    inputsClonados.forEach(input => {
-                                        const viejoId = input.id;
-                                        input.name = nombreGrupo + '_retry';
-                                        input.checked = false;
-                                        input.disabled = false;
-                                        input.id = viejoId + '_retry';
-                                        tarjetaClonada.querySelector(`label[for="${viejoId}"]`).setAttribute('for', input.id);
-                                    });
+                                        const inputsClonados = tarjetaClonada.querySelectorAll('input[type="radio"]');
+                                        const divsOpciones = tarjetaClonada.querySelectorAll('.option-item');
 
-                                    divsOpciones.forEach(div => {
-                                        div.classList.remove('correct-answer', 'incorrect-answer');
-                                        div.style.cursor = 'pointer';
-                                    });
+                                        inputsClonados.forEach(input => {
+                                            const viejoId = input.id;
+                                            input.name = nombreGrupo + '_retry';
+                                            input.checked = false;
+                                            input.disabled = false;
+                                            input.id = viejoId + '_retry';
+                                            tarjetaClonada.querySelector(`label[for="${viejoId}"]`).setAttribute('for', input.id);
+                                        });
 
-                                    tituloReintentos.style.display = 'block';
-                                    contenedorReintentos.appendChild(tarjetaClonada);
-                                    tarjetaOriginal.style.display = 'none';
-                                }, 300);
-                            }, 600);
+                                        divsOpciones.forEach(div => {
+                                            div.classList.remove('correct-answer', 'incorrect-answer');
+                                            div.style.cursor = 'pointer';
+                                        });
+
+                                        tituloReintentos.style.display = 'block';
+                                        contenedorReintentos.appendChild(tarjetaClonada);
+                                        tarjetaOriginal.style.display = 'none';
+                                    }, 300);
+                                }, 600);
+                            }
                         }
                     }
 
                     // 3. Comprobar finalizacion
                     if (preguntasRespondidasOriginales === TOTAL_PREGUNTAS_INICIALES) {
-                        if (contenedorReintentos.children.length === 0) {
+                        if (!isRetryMode || contenedorReintentos.children.length === 0) {
                             mostrarEvaluacionFinal(aciertosPrimerIntento, TOTAL_PREGUNTAS_INICIALES);
                         }
                     }
